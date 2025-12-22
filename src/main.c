@@ -23,5 +23,11 @@ int main(int argc, char** argv) {
 
     test_system();
 
+    size_t* width;
+    size_t* height;
+
+    get_terminal_size(width, height);
+    printf("width: %ld, height: %ld \n", *width, *height);
+
     
 }
