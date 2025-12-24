@@ -1,15 +1,13 @@
 // certified command line arguments momentos
 #include <stdio.h>
-
+#include <stdlib.h>
 #ifdef _WIN32
     #include <windows.h>
     #include <io.h>
 #else
     #include <sys/ioctl.h>
     #include <unistd.h>
-
 #endif
-
 
 
 void test_system() {
@@ -25,6 +23,8 @@ void test_system() {
     return;
 }
 
+
+// obtains terminal height
 int get_terminal_size(size_t* width, size_t* height) {
 #ifdef _WIN32
     if (!isatty(0)) {
@@ -43,7 +43,8 @@ int get_terminal_size(size_t* width, size_t* height) {
     *height = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
     return 1;
 #else
-    if (isatty(0)) {
+    if (!isatty(0)) {
+        
         return 0;
     }
     struct winsize ws;
