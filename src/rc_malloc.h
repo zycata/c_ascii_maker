@@ -9,7 +9,7 @@ void rc_keep_ref(void* ptr);
 
 void rc_free_ref(void* ptr);
 
-long rc_get_refs(void* ptr);
+unsigned long rc_get_refs(void* ptr);
 
 
 
