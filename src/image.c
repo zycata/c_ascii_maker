@@ -7,15 +7,32 @@
 
 
 void print_image_information(image_information* img) {
-    rc_keep_ref(img);
-    printf("Printing image data:\nwidth: %zu height: %zu channels %zu total data size: %zu\n", 
-        img->width, img->height, img->channels, img->data_size);
-    if (img->data_size > 3) {
-        printf("first 3 values%lf %lf %lf\n", img->data[0], img->data[1],img->data[2]);
-    }
-    rc_free_ref(img);
-}
+    printf("\n"); 
+    printf("---   Image Information Summary ---\n");
 
+    printf("  Width:            %6zu pixels\n", img->width);
+    printf("  Height:           %6zu pixels\n", img->height);
+    printf("  Channels:         %6zu\n", img->channels);
+    printf("  Total Data Size:  %6zu elements\n", img->data_size);
+
+    if (img->data_size > 0 && img->data != NULL) {
+        printf("\n");
+        printf("  Pixel Data Sample (First %zu elements):\n", img->data_size < 3 ? img->data_size : 3);
+        
+        for (size_t i = 0; i < img->data_size && i < 3; ++i) {
+            printf("    Data[%zu]: %10.4lf\n", i, img->data[i]);
+        }
+        
+        if (img->data_size > 3) {
+            printf("    ...\n"); 
+        }
+    } else {
+        printf("\n");
+        printf("  Pixel Data:       (Data array is NULL or size is 0)\n");
+    }
+    
+    printf("--------------------------------------\n");
+}
 
 image_information* load_image(const char* file_path) {
     int width, height, channels;
@@ -66,3 +83,8 @@ void set_pixel(image_information* image, size_t x, size_t y, double* new_pixel) 
         old_pixel[i] = new_pixel[i];
     }
 }
+
+/*
+int resize_image(image_information* resized, image_information* old, size_t new_width, size_t new_height) {
+
+}*/

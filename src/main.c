@@ -6,6 +6,15 @@
 #include "image.h"
 
 
+void test_image() {
+    image_information* img = load_image("white.jpg");
+    print_image_information(img);
+
+    // omg my rc coutning does work omg yes yes valgrind sdaid so
+    rc_free_ref(img->data);
+    rc_free_ref(img);
+}
+
 int main(int argc, char** argv) {
 
     printf("argc: %d\n", argc);
@@ -30,7 +39,7 @@ int main(int argc, char** argv) {
         printf("failed to get terminal size");
         return 0;
     }
-    printf("width: %zu, height: %zu \n", *width, *height);
+    printf("terminal width: %zu, height: %zu \n", *width, *height);
 
     free(height);
     free(width);
@@ -39,17 +48,16 @@ int main(int argc, char** argv) {
     // ainsi escape sequencing
     int r = 0xD3;
     int g = 0;
-    int b = 0;
+    int b = 0xFF;
     printf("\x1b[38;2;%d;%d;%dm%s\n", r, g, b, "what the fuck is a kilometer");
     printf("\x1b[0m");
 
 
+    args_list* s = rc_malloc(sizeof(args_list));
+    
+    parse_arguments(argc, argv, s);
+    print_arguments(s);
+    rc_free_ref(s);
 
-    image_information* img = load_image("white.jpg");
-    print_image_information(img);
-
-    // omg my rc coutning does work omg yes yes valgrind sdaid so
-    rc_free_ref(img->data);
-    rc_free_ref(img);
     return 0;
 }
