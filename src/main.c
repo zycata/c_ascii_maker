@@ -4,15 +4,30 @@
 #include "rc_malloc.h"
 #include "cla_parse.h"
 #include "image.h"
+#define STB_IMAGE_WRITE_IMPLEMENTATION
 
-
+#include "../stbi/stb_image_write.h"
 void test_image() {
     image_information* img = load_image("white.jpg");
     print_image_information(img);
 
+    image_information* resized =  resize_image(img, 1500, 3000, 2.0);
+
+    print_image_information(resized);
+
+    unsigned char* data = rc_malloc(sizeof(*data)* resized->data_size);
+    for (size_t i = 0; i < resized->data_size; i++) {
+        data[i] = (unsigned char) resized->data[i];
+    }
+    stbi_write_jpg("shrunk.jpg", resized->width, resized->height, resized->channels, data, 100);
     // omg my rc coutning does work omg yes yes valgrind sdaid so
     rc_free_ref(img->data);
     rc_free_ref(img);
+    
+    rc_free_ref(resized->data);
+    rc_free_ref(resized);
+    rc_free_ref(data);
+
 }
 
 int main(int argc, char** argv) {
@@ -21,14 +36,6 @@ int main(int argc, char** argv) {
     for (int i=0; i < argc; i++) {
         printf("%s ", argv[i]);
     }
-
-
-    int* reals = rc_malloc(sizeof(int)*10);
-
-    printf("\nreference count: %lu \n", rc_get_refs(reals));
-
-
-    rc_free_ref(reals);
 
     test_system();
 
@@ -41,6 +48,8 @@ int main(int argc, char** argv) {
     }
     printf("terminal width: %zu, height: %zu \n", *width, *height);
 
+    calculate_new_dimensions(width, height, (size_t) 3000,(size_t) 4499,(size_t) 1500,(size_t) 3000, 2.0);
+    printf("new width: %zu, height: %zu \n", *width, *height);
     free(height);
     free(width);
 
@@ -59,5 +68,6 @@ int main(int argc, char** argv) {
     print_arguments(s);
     rc_free_ref(s);
 
+     test_image();
     return 0;
 }

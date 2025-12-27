@@ -88,7 +88,7 @@ void set_pixel(image_information* image, size_t x, size_t y, double* new_pixel) 
 // x1 < x2 and y1 < y2, writes to average_pixel
 // ok so turns out this shit actually sucks at resizing images from like something like 4000x3000 -> 3000x2000 if the ratios are too close the thing fucks up
 // so like atleast a 2x ratio is needed
-void get_average_pixel(image_information* img, double* average_pixel, size_t x1, size_t x2, size_t y1, size_t y2) {
+void write_average_pixel(image_information* img, double* average_pixel, size_t x1, size_t x2, size_t y1, size_t y2) {
     double total_pixels = (double) (x2-x1) * (y2 - y1);
 
     if (total_pixels == 0) {
@@ -179,7 +179,7 @@ image_information* resize_image(image_information* original, size_t max_width, s
             size_t x1 = (_x * original->width) / (new_width);
             size_t x2 = ((_x + 1) * original->width) / (new_width);
 
-            get_average_pixel(original, &resized_image_data[(_x + _y * new_width) * channels], x1, x2, y1, y2);
+            write_average_pixel(original, &resized_image_data[(_x + _y * new_width) * channels], x1, x2, y1, y2);
         }
     }
 
