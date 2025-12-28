@@ -5,7 +5,10 @@
 #include "../stbi/stb_image.h"
 #include <stdio.h>
 
-
+void rc_free_image_info(image_information* img) {
+    rc_free_ref(img->data);
+    rc_free_ref(img);
+}
 
 void print_image_information(image_information* img) {
     printf("\n"); 
@@ -92,7 +95,7 @@ void write_average_pixel(image_information* img, double* average_pixel, size_t x
     double total_pixels = (double) (x2-x1) * (y2 - y1);
 
     if (total_pixels == 0) {
-        // fuckass cant code for shi
+        // fuckass cant code for shit -> bug mentioned in comment below
         total_pixels = 1;
     }
     // fuck i made rc_malloc so i will refuse to use calloc
@@ -132,13 +135,30 @@ void calculate_new_dimensions(size_t* new_width, size_t* new_height, size_t orig
         proposed_height = max_height;
         double new = (terminal_ratio * original_width) / (double) ((double) original_height / (double) max_height);
 
-        proposed_width = new;
+        proposed_width = (size_t) new;
+
+        // python who have some function called do_what_you_want that does what you want by reading ur mind
+        if (proposed_width > max_width) {
+            proposed_width = max_width;
+            new = original_height / ((double) original_width / (double) max_width) / terminal_ratio;
+            proposed_height = (size_t) new;
+        }
     } else {
-        printf("Not resizing the image\n");
+        printf("Not resizing the image as it fits the terminal constraints\n");
     }
+
+    // so TECHNICALLY this fixes the problem when the resized ratio is too similar
+    // however this solution sucks shit but im also gonna keep it
+    double ratio_x = original_width / proposed_width;
+    double ratio_y = original_height / proposed_height;
+    if (ratio_x < 2.0 || ratio_y < 2.0) {
+        proposed_width = original_width / 2;
+        proposed_height = original_height / (2*terminal_ratio);
+    }
+
     *new_width = proposed_width;
     *new_height = proposed_height;
-
+    
 }
 // yeah i kinda suck at allocating memory actually
 // yeah uhh it doesnt work if the new image size is too similar to the old one :skull: i hope that scenario NEVER happens 
@@ -146,17 +166,9 @@ image_information* resize_image(image_information* original, size_t max_width, s
     size_t new_width, new_height;
     size_t channels = original->channels;
 
+    // lord forgive me for my sins
     calculate_new_dimensions(&new_width, &new_height, original->width, original->height, max_width, max_height, terminal_ratio);
 
-    // so TECHNICALLY this fixes the problem when the resized ratio is too similar
-    // however this solution sucks shit but im also gonna keep it
-    // !!! todo: offload this to calculate_new_dimensions
-    double ratio_x = original->width / new_width;
-    double ratio_y = original->height / new_height;
-    if (ratio_x < 2.0 || ratio_y < 2.0) {
-        new_width = original->width / 2;
-        new_height = original->height / (2*terminal_ratio);
-    }
 
     size_t resized_total_data_size = new_width * new_height * channels;
     double* resized_image_data = rc_malloc(resized_total_data_size * sizeof(double));
@@ -179,6 +191,7 @@ image_information* resize_image(image_information* original, size_t max_width, s
             size_t x1 = (_x * original->width) / (new_width);
             size_t x2 = ((_x + 1) * original->width) / (new_width);
 
+            // todo ?? multithread this (i need a reason for rc_malloc to exist)
             write_average_pixel(original, &resized_image_data[(_x + _y * new_width) * channels], x1, x2, y1, y2);
         }
     }

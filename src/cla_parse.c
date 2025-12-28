@@ -15,7 +15,7 @@
 #define DEFAULT_MAX_HEIGHT = 64
 #define DEFAULT_SOBEL_EDGE_THRESHOLD = 4.0
 #define DEFAULT_COLOR_OPTION = 1 // should have color
-
+#define DEFAULT_CHARACTER_RATIO = 2.0
 
 
 void test_system() {
@@ -87,7 +87,8 @@ int parse_arguments(int argc, char* argv[], args_list* arguments) {
     arguments->max_height  DEFAULT_MAX_HEIGHT;
     arguments->edge_sobel_threshold DEFAULT_SOBEL_EDGE_THRESHOLD;
     arguments->color_option DEFAULT_COLOR_OPTION;
-    
+    arguments->character_ratio DEFAULT_CHARACTER_RATIO;
+
     size_t width, height;
 
     if(!get_terminal_size(&width, &height)) {
@@ -115,7 +116,7 @@ int parse_arguments(int argc, char* argv[], args_list* arguments) {
         }
     }
 
-    arguments->character_ratio = (double) arguments->max_width / arguments->max_height;
+    
 
     // successfully parsed arguments
     return 1;
@@ -134,8 +135,8 @@ void print_arguments(const args_list* args) {
 
     printf("--- args_list Contents ---\n");
     printf("  File Path:              %s\n", args->file_path != NULL ? args->file_path : "(NULL)");
-    printf("  Max Width (px):         %zu\n", args->max_width);
-    printf("  Max Height (px):        %zu\n", args->max_height);
+    printf("  Max Width (Chars):      %zu\n", args->max_width);
+    printf("  Max Height (Chars):     %zu\n", args->max_height);
     printf("  Edge Sobel Threshold:   %lf\n", args->edge_sobel_threshold);
     printf("  Color Option:           %d\n", args->color_option);
     printf("  Charracter Ratio:       %lf\n", args->character_ratio);

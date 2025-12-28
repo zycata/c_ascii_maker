@@ -13,6 +13,8 @@ typedef struct {
 
 } image_information;
 
+void rc_free_image_info(image_information* img);
+
 void print_image_information(image_information* img); 
 image_information* load_image(const char* file_path);
 
