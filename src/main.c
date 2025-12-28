@@ -4,11 +4,12 @@
 #include "rc_malloc.h"
 #include "cla_parse.h"
 #include "image.h"
+#include "print_image.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 
 #include "../stbi/stb_image_write.h"
 void test_image() {
-    image_information* img = load_image("white.jpg");
+    image_information* img = load_image("lightning.jpg");
     print_image_information(img);
 
     image_information* resized =  resize_image(img, 1500, 3000, 2.0);
@@ -21,14 +22,14 @@ void test_image() {
     }
     stbi_write_jpg("shrunk.jpg", resized->width, resized->height, resized->channels, data, 100);
     // omg my rc coutning does work omg yes yes valgrind sdaid so
-    rc_free_ref(img->data);
-    rc_free_ref(img);
-    
-    rc_free_ref(resized->data);
-    rc_free_ref(resized);
+    rc_free_image_info(img);    
+    rc_free_image_info(resized);
+
     rc_free_ref(data);
 
 }
+
+void output_image(args_list* arguments);
 
 int main(int argc, char** argv) {
 
@@ -54,20 +55,27 @@ int main(int argc, char** argv) {
     free(width);
 
 
-    // ainsi escape sequencing
-    int r = 0xD3;
-    int g = 0;
-    int b = 0xFF;
-    printf("\x1b[38;2;%d;%d;%dm%s\n", r, g, b, "what the fuck is a kilometer");
-    printf("\x1b[0m");
-
 
     args_list* s = rc_malloc(sizeof(args_list));
     
     parse_arguments(argc, argv, s);
     print_arguments(s);
-    rc_free_ref(s);
+    
 
-     test_image();
+    output_image(s);
+
+    rc_free_ref(s);
     return 0;
+}
+
+
+void output_image(args_list* arguments) {
+    image_information* img = load_image(arguments->file_path);
+    image_information* resized = resize_image(img, arguments->max_width, arguments->max_height, arguments->character_ratio);
+
+    print_brightened_image(resized, arguments->brighten_amount);
+
+
+
+
 }
