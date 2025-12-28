@@ -40,20 +40,6 @@ int main(int argc, char** argv) {
 
     test_system();
 
-    size_t* width = malloc(sizeof(*width));
-    size_t* height = malloc(sizeof(*height));
-
-    if (!get_terminal_size(width, height)) {
-        printf("failed to get terminal size");
-        return 0;
-    }
-    printf("terminal width: %zu, height: %zu \n", *width, *height);
-
-    calculate_new_dimensions(width, height, (size_t) 3000,(size_t) 4499,(size_t) 1500,(size_t) 3000, 2.0);
-    printf("new width: %zu, height: %zu \n", *width, *height);
-    free(height);
-    free(width);
-
 
 
     args_list* s = rc_malloc(sizeof(args_list));
@@ -71,11 +57,15 @@ int main(int argc, char** argv) {
 
 void output_image(args_list* arguments) {
     image_information* img = load_image(arguments->file_path);
+    if (!img) {
+        return;
+    }
     image_information* resized = resize_image(img, arguments->max_width, arguments->max_height, arguments->character_ratio);
 
     print_brightened_image(resized, arguments->brighten_amount);
 
-
+    rc_free_image_info(resized);
+    rc_free_image_info(img);
 
 
 }
