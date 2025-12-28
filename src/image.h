@@ -18,6 +18,8 @@ void rc_free_image_info(image_information* img);
 void print_image_information(image_information* img); 
 image_information* load_image(const char* file_path);
 
+double* get_pixel(image_information* image, size_t x, size_t y);
+
 void calculate_new_dimensions(size_t* new_width, size_t* new_height, size_t original_width, size_t original_height, size_t max_width, size_t max_height, double terminal_ratio);
 image_information* resize_image(image_information* original, size_t max_width, size_t max_height, double terminal_ratio);
 #endif

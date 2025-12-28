@@ -10,7 +10,7 @@ typedef struct {
     int color_option;
 
     double character_ratio; // width/height
-
+    double brighten_amount;
 
 } args_list;
 

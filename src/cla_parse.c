@@ -16,7 +16,7 @@
 #define DEFAULT_SOBEL_EDGE_THRESHOLD = 4.0
 #define DEFAULT_COLOR_OPTION = 1 // should have color
 #define DEFAULT_CHARACTER_RATIO = 2.0
-
+#define DEFAULT_BRIGHTEN_AMOUNT = 1.25
 
 void test_system() {
 #ifdef _WIN32
@@ -88,7 +88,8 @@ int parse_arguments(int argc, char* argv[], args_list* arguments) {
     arguments->edge_sobel_threshold DEFAULT_SOBEL_EDGE_THRESHOLD;
     arguments->color_option DEFAULT_COLOR_OPTION;
     arguments->character_ratio DEFAULT_CHARACTER_RATIO;
-
+    arguments->brighten_amount DEFAULT_BRIGHTEN_AMOUNT;
+    
     size_t width, height;
 
     if(!get_terminal_size(&width, &height)) {
@@ -107,6 +108,9 @@ int parse_arguments(int argc, char* argv[], args_list* arguments) {
         } 
         else if (!strcmp(argv[i], "-esl") && i + 1 < argc) {
             arguments->edge_sobel_threshold = atof(argv[++i]);
+        }
+        else if (!strcmp(argv[i], "-ba") && i + 1 < argc) {
+            arguments->brighten_amount = atof(argv[++i]);
         } 
         else if (!strcmp(argv[i], "--usebw")) {
             arguments->color_option = 0;
@@ -139,6 +143,7 @@ void print_arguments(const args_list* args) {
     printf("  Max Height (Chars):     %zu\n", args->max_height);
     printf("  Edge Sobel Threshold:   %lf\n", args->edge_sobel_threshold);
     printf("  Color Option:           %d\n", args->color_option);
-    printf("  Charracter Ratio:       %lf\n", args->character_ratio);
+    printf("  Character Ratio:        %lf\n", args->character_ratio);
+    printf("  Brighten Amount:        %lf\n", args->brighten_amount);
     printf("--------------------------\n");
 }
