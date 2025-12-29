@@ -1,9 +1,16 @@
-
 #include "image.h"
 #include "rc_malloc.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "../stbi/stb_image.h"
 #include <stdio.h>
+
+#define SOBEL_X {-1, 0, 1, -2, 0, 2, -1, 0, 1}
+#define SOBEL_X_ROWS 3
+#define SOBEL_X_COLS 3
+
+#define SOBEL_Y {-1, -2, -1, 0, 0, 0, 1, 2, 1}
+#define SOBEL_Y_ROWS 3
+#define SOBEL_Y_COLS 3
 
 void rc_free_image_info(image_information* img) {
     rc_free_ref(img->data);
@@ -78,6 +85,9 @@ image_information* load_image(const char* file_path) {
 
 
 double* get_pixel(image_information* image, size_t x, size_t y) {
+    if (x > image->width-1 || y > image->height-1) {
+        return NULL;
+    }
     return &image->data[(y * image->width + x) * image->channels];
 }
 
@@ -210,3 +220,61 @@ image_information* resize_image(image_information* original, size_t max_width, s
     return resized_image;
 }
 
+// returns a value from 0 to 255.0
+double get_grayscale_from_pixel(image_information* img, size_t x, size_t y) {
+    if (img->channels < 3) {
+        return get_pixel(img, x, y)[0];
+    }
+    double* pixel = get_pixel(img, x, y);
+    double r = pixel[0];
+    double g = pixel[1];
+    double b = pixel[2];
+    double gamma = 0.2126 * r + 0.7152 * g + 0.0722 * b ;
+    return gamma;
+}
+
+// returns a value from -255.0 to 255.0 
+// kernel must be a square matrice + flattened
+double get_convolution_value_from_kernel(image_information* img, size_t x, size_t y, double* kernel, int kernel_rows, int kernel_cols) {
+    size_t cur_item = 0;
+    // size_t kernel_size = kernel_rows * kernel_cols;
+    // double* total_items = rc_malloc(sizeof(*total_items)*kernel_size);
+    
+    // shift the start xy value to be offset to be the top of where the
+    // kernel should be
+    int start_x = x - (kernel_rows/2);
+    int start_y = y - (kernel_cols/2);
+    double convolution_sum = 0;
+    // j for y, i for x
+    // honestly i think i really could have done a better job with variable naming here
+    for (int j = start_y; j <  start_y+kernel_rows; j++) {
+        for (int i = start_x; i < start_x+kernel_cols; i++) {
+            if ((j < 0 || i < 0) || (get_pixel(img, i, j) == NULL)) {
+                // pixel doesn't exist
+                // honestly i do wish i could go back to python where it's just number instead of these data types
+                
+            } else {
+                convolution_sum += get_grayscale_from_pixel(img, i, j) * kernel[cur_item];
+                cur_item++;
+            }
+            // fucklass logic
+            
+            
+        }
+    }
+    
+    return convolution_sum / (kernel_cols * kernel_rows);
+}
+
+
+double get_sobel_x(image_information* img, size_t x, size_t y) {
+    // sobel x kernel
+    double sobel_kernal_x[] = SOBEL_X;
+    return get_convolution_value_from_kernel(img, x, y, sobel_kernal_x, SOBEL_X_ROWS, SOBEL_X_COLS);
+}
+
+double get_sobel_y(image_information* img, size_t x, size_t y) {
+    // sobel x kernel
+    double sobel_kernal_y[] = SOBEL_Y;
+    return get_convolution_value_from_kernel(img, x, y, sobel_kernal_y, SOBEL_Y_ROWS, SOBEL_Y_COLS);
+}

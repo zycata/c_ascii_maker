@@ -33,18 +33,14 @@ void output_image(args_list* arguments);
 
 int main(int argc, char** argv) {
 
-    printf("argc: %d\n", argc);
-    for (int i=0; i < argc; i++) {
-        printf("%s ", argv[i]);
-    }
-
     test_system();
-
-
 
     args_list* s = rc_malloc(sizeof(args_list));
     
-    parse_arguments(argc, argv, s);
+    if(!parse_arguments(argc, argv, s)) {
+        return 1;
+    }
+    
     print_arguments(s);
     
 
@@ -63,7 +59,7 @@ void output_image(args_list* arguments) {
     image_information* resized = resize_image(img, arguments->max_width, arguments->max_height, arguments->character_ratio);
 
     print_brightened_image(resized, arguments->brighten_amount);
-
+    printf("%lf\n", get_sobel_x(resized, resized->width, resized->height));
     rc_free_image_info(resized);
     rc_free_image_info(img);
 

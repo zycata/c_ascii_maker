@@ -22,4 +22,8 @@ double* get_pixel(image_information* image, size_t x, size_t y);
 
 void calculate_new_dimensions(size_t* new_width, size_t* new_height, size_t original_width, size_t original_height, size_t max_width, size_t max_height, double terminal_ratio);
 image_information* resize_image(image_information* original, size_t max_width, size_t max_height, double terminal_ratio);
+
+double get_convolution_value_from_kernel(image_information* img, size_t x, size_t y, double* kernel, int kernel_rows, int kernel_cols);
+double get_sobel_x(image_information* img, size_t x, size_t y);
+double get_sobel_y(image_information* img, size_t x, size_t y);
 #endif
