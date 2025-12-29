@@ -19,11 +19,11 @@ make release
 ```
 
 ### Optional flags
-- `-mw` maximum width  (Default terminal height or 96 characters)
-- `-mh` maximum height (Default terminal height or 64 characters)
-- `-esl` Sobel edge detect threshold (TODO)
-- `-ba` Brighten image amount (Default 1.25)
-- `--usebw` use black and white (Default OFF)
+- `-mw` maximum width  (Default terminal height or 96 characters)  
+- `-mh` maximum height (Default terminal height or 64 characters)  
+- `-esl` Sobel edge detect threshold (TODO)  
+- `-ba` Brighten image amount (Default 1.25)  
+- `--usebw` use black and white (Default OFF)  
 
 
 Example use cases 
