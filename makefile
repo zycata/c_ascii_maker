@@ -15,6 +15,7 @@ else
 endif
 
 clang: CC = clang
+clang: CFLAGS += -O3 -march=native -fuse-ld=lld
 clang: clean $(TARGET)
 $(TARGET): $(OBJECTS)
 	$(CC) $(OBJECTS)  $(LDFLAGS)  -o $(TARGET)

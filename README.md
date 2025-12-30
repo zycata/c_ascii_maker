@@ -3,9 +3,9 @@
 Simple project that can take an input image and generator ascii-art from the image
 
 Usage:
-'''
+```bash
 ./ascii.exe path/to/image.png -other -flags
-'''
+```
 
 #
 To build: 
@@ -13,6 +13,9 @@ To build:
 ```bash
 # Regular build
 make
+
+# build with clang
+make clang
 
 # compiled with optimizations
 make release
