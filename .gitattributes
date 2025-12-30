@@ -1,0 +1,4 @@
+* linguist-vendored
+
+# why does github think my code is c++ brah
+*.c !linguist-vendored
