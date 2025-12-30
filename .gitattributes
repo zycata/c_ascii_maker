@@ -2,3 +2,6 @@
 
 # why does github think my code is c++ brah
 *.c !linguist-vendored
+*.h !linguist-vendored
+
+Makefile !linguist-vendored
