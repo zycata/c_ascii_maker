@@ -8,7 +8,7 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 
 #include "../stbi/stb_image_write.h"
-void test_image() {
+void test_image(void) {
     image_information* img = load_image("lightning.jpg");
     print_image_information(img);
 
@@ -62,6 +62,5 @@ void output_image(args_list* arguments) {
     printf("%lf\n", get_sobel_x(resized, resized->width, resized->height));
     rc_free_image_info(resized);
     rc_free_image_info(img);
-
 
 }

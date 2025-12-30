@@ -1,5 +1,3 @@
-
-
 #ifndef C_IMAGE
 #define C_IMAGE
 #include <stdlib.h>

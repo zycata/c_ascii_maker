@@ -6,8 +6,19 @@ SOURCES = $(wildcard $(SRCDIR)/*.c)
 OBJECTS = $(SOURCES:.c=.o)
 TARGET = cascii.exe
 
+ifeq ($(OS),Windows_NT)
+	# my laptop has like a weird dependency issue or something where adding -lm causes linker errors
+	
+    LDFLAGS =
+else
+    LDFLAGS = -lm
+endif
+
+clang: CC = clang
+clang: clean $(TARGET)
 $(TARGET): $(OBJECTS)
 	$(CC) $(OBJECTS)  $(LDFLAGS)  -o $(TARGET)
+
 
 # Release build with optimization
 release: CFLAGS += -O3 -flto -march=native

@@ -18,7 +18,7 @@
 #define DEFAULT_CHARACTER_RATIO 2.0
 #define DEFAULT_BRIGHTEN_AMOUNT 1.10
 
-void test_system() {
+void test_system(void) {
 #ifdef _WIN32
     printf("OMG WINDOWS MOMENT OMG");
 
@@ -35,7 +35,7 @@ void test_system() {
 // obtains terminal height
 int get_terminal_size(size_t* width, size_t* height) {
 #ifdef _WIN32
-    if (!isatty(0)) {
+    if (!_isatty(0)) {
         return 0;
     }
 

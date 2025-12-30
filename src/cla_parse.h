@@ -20,7 +20,7 @@ typedef struct {
 
 
 
-void test_system();
+void test_system(void);
 
 int get_terminal_size(size_t* width, size_t* height);
 
