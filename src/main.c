@@ -58,7 +58,7 @@ void output_image(args_list* arguments) {
     }
     image_information* resized = resize_image(img, arguments->max_width, arguments->max_height, arguments->character_ratio);
 
-    print_brightened_image(resized, arguments->brighten_amount);
+    print_brightened_image(resized, arguments->brighten_amount, arguments->edge_sobel_threshold, arguments->color_option);
     printf("%lf\n", get_sobel_x(resized, resized->width, resized->height));
     rc_free_image_info(resized);
     rc_free_image_info(img);

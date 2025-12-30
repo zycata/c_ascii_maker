@@ -11,12 +11,12 @@
     #include <unistd.h>
 #endif
 
-#define DEFAULT_MAX_WIDTH = 96
-#define DEFAULT_MAX_HEIGHT = 64
-#define DEFAULT_SOBEL_EDGE_THRESHOLD = 4.0
-#define DEFAULT_COLOR_OPTION = 1 // should have color
-#define DEFAULT_CHARACTER_RATIO = 2.0
-#define DEFAULT_BRIGHTEN_AMOUNT = 1.25
+#define DEFAULT_MAX_WIDTH 96
+#define DEFAULT_MAX_HEIGHT 64
+#define DEFAULT_SOBEL_EDGE_THRESHOLD 64.0
+#define DEFAULT_COLOR_OPTION 1 // should have color
+#define DEFAULT_CHARACTER_RATIO 2.0
+#define DEFAULT_BRIGHTEN_AMOUNT 1.10
 
 void test_system() {
 #ifdef _WIN32
@@ -83,12 +83,12 @@ int parse_arguments(int argc, char* argv[], args_list* arguments) {
     arguments->file_path = argv[1];
 
 
-    arguments->max_width  DEFAULT_MAX_WIDTH;
-    arguments->max_height  DEFAULT_MAX_HEIGHT;
-    arguments->edge_sobel_threshold DEFAULT_SOBEL_EDGE_THRESHOLD;
-    arguments->color_option DEFAULT_COLOR_OPTION;
-    arguments->character_ratio DEFAULT_CHARACTER_RATIO;
-    arguments->brighten_amount DEFAULT_BRIGHTEN_AMOUNT;
+    arguments->max_width = DEFAULT_MAX_WIDTH;
+    arguments->max_height = DEFAULT_MAX_HEIGHT;
+    arguments->edge_sobel_threshold = DEFAULT_SOBEL_EDGE_THRESHOLD;
+    arguments->color_option = DEFAULT_COLOR_OPTION;
+    arguments->character_ratio = DEFAULT_CHARACTER_RATIO;
+    arguments->brighten_amount = DEFAULT_BRIGHTEN_AMOUNT;
     
     size_t width, height;
 
@@ -106,7 +106,7 @@ int parse_arguments(int argc, char* argv[], args_list* arguments) {
         else if (!strcmp(argv[i], "-mh") && i + 1 < argc) {
             arguments->max_height = strtoul(argv[++i], NULL, 0);
         } 
-        else if (!strcmp(argv[i], "-esl") && i + 1 < argc) {
+        else if (!strcmp(argv[i], "-set") && i + 1 < argc) {
             arguments->edge_sobel_threshold = atof(argv[++i]);
         }
         else if (!strcmp(argv[i], "-ba") && i + 1 < argc) {
@@ -114,7 +114,10 @@ int parse_arguments(int argc, char* argv[], args_list* arguments) {
         } 
         else if (!strcmp(argv[i], "--usebw")) {
             arguments->color_option = 0;
-        } 
+        }
+        else if (!strcmp(argv[i], "-o")) {
+            // pass but make it output to a .txt file
+        }
         else {
             fprintf(stderr, "Warning: Ignoring invalid or incomplete argument '%s'\n", argv[i]);
         }

@@ -9,8 +9,11 @@ typedef struct {
     double edge_sobel_threshold;
     int color_option;
 
-    double character_ratio; // width/height
+
+    double character_ratio; 
     double brighten_amount;
+
+    double contrast_change; // todo
 
 } args_list;
 
