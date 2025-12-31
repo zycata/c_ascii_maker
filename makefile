@@ -14,20 +14,22 @@ else
     LDFLAGS = -lm
 endif
 
-clang: CC = clang
-clang: CFLAGS += -O3 -march=native -fuse-ld=lld
-clang: clean $(TARGET)
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
 $(TARGET): $(OBJECTS)
 	$(CC) $(OBJECTS)  $(LDFLAGS)  -o $(TARGET)
 
+clang: CC = clang
+clang: CFLAGS += -O3 -march=native
+clang: clean $(TARGET)
 
 # Release build with optimization
 release: CFLAGS += -O3 -flto -march=native
 release: LDFLAGS += -flto
 release: clean $(TARGET)
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+
 
 clean:
 	rm -f $(SRCDIR)/*.o $(TARGET)

@@ -2,6 +2,7 @@
 #include "image.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #define VALUE_CHARS " .-=+*x#$&X@"
 #define N_VALUES (sizeof(VALUE_CHARS) - 1)
@@ -30,27 +31,17 @@ char get_ascii_char(double grayscale) {
     return VALUE_CHARS[index];
 }
 
-// todo finish later
-int get_sobel_char(char* character, double sobel_x, double sobel_y, double threshold) {
-    
-    if ((sobel_x < -1*threshold && sobel_y < -1*threshold)) {
-        *character = '/';
-    } 
-    
-    else if (sobel_x > threshold && sobel_y > threshold) {
-        *character = '\\';
-    }
-    else if (fabs(sobel_x) > threshold) {
-        (*character) = '|';
-    } else if (fabs(sobel_y) > threshold) {
-        (*character) = '_';
-    } else {
-        return 0;
-    }
-
-
-    return 1;
+char get_sobel_angle_char(double sobel_angle) {
+    if ((22.5 <= sobel_angle && sobel_angle <= 67.5) || (-157.5 <= sobel_angle && sobel_angle <= -112.5))
+        return '/';
+    else if ((67.5 <= sobel_angle && sobel_angle <= 112.5) || (-112.5 <= sobel_angle && sobel_angle <= -67.5))
+        return '_';
+    else if ((112.5 <= sobel_angle && sobel_angle <= 157.5) || (-67.5 <= sobel_angle && sobel_angle <= -22.5))
+        return '\\';
+    else
+        return '|';
 }
+
 
 // omg diy min function??? 
 double find_min(double a, double b) {
@@ -62,29 +53,40 @@ void brighten(double *r, double *g, double* b, double amount) {
     *b = find_min(255.0, (*b) * amount);
 }
 void print_brightened_image(image_information* img, double brighten_amount, double sobel_threshhold, int color_option) {
-    
-
-
     for (size_t _y = 0; _y < img->height; _y++) {
         for (size_t _x = 0; _x < img->width; _x++) {
             double* pixel = get_pixel(img, _x, _y);
+
+            
 
             double r = pixel[0];
             double g = pixel[1];
             double b = pixel[2];
             brighten(&r, &g, &b, brighten_amount);
             
-            double sobel_x = get_sobel_x(img, _x, _y);
-            double sobel_y = get_sobel_y(img, _x, _y);
+            
 
             char character_to_use;
 
-            
-            if (!get_sobel_char(&character_to_use, sobel_x, sobel_y, sobel_threshhold)) {
-                character_to_use = get_ascii_char(get_grayscale_from_rgb(r, g, b));
-            } 
-            
-            
+            double sobel_x, sobel_y;
+            if (_x == 0 || _x == img->width - 1 || _y==0 || _y == img->height - 1) {
+                sobel_x = 0;
+                sobel_y = 0;
+            } else {
+                sobel_x = get_sobel_x(img, _x, _y);
+                sobel_y = get_sobel_y(img, _x, _y);
+                
+            }
+
+            double sobel_magnitude = sqrt(sobel_x*sobel_x + sobel_y*sobel_y);
+            double sobel_angle = atan2(sobel_y, sobel_x) * 180.0 / 3.14159;
+            // printf("Angle %lf Magnitude%lf\n", sobel_angle, sobel_magnitude);
+
+            if (sobel_magnitude > sobel_threshhold) {
+                character_to_use = get_sobel_angle_char(sobel_angle);
+            } else {
+                character_to_use = get_ascii_char(get_grayscale_from_rgb(r,g,b));
+            }
             if (!color_option) {
                 printf("%c", character_to_use);
                 continue;
