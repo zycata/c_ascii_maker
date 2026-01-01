@@ -4,7 +4,7 @@
 #include "rc_malloc.h"
 #include "cla_parse.h"
 #include "image.h"
-#include "print_image.h"
+#include "output_image.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 
 #include "../stbi/stb_image_write.h"
@@ -29,7 +29,7 @@ void test_image(void) {
 
 }
 
-void output_image(args_list* arguments);
+void poof(args_list* arguments);
 
 int main(int argc, char** argv) {
 
@@ -44,21 +44,21 @@ int main(int argc, char** argv) {
     print_arguments(s);
     
 
-    output_image(s);
+    poof(s);
 
     rc_free_ref(s);
     return 0;
 }
 
 
-void output_image(args_list* arguments) {
-    image_information* img = load_image(arguments->file_path);
+void poof(args_list* args) {
+    image_information* img = load_image(args->file_path);
     if (!img) {
         return;
     }
-    image_information* resized = resize_image(img, arguments->max_width, arguments->max_height, arguments->character_ratio);
+    image_information* resized = resize_image(img, args->max_width, args->max_height, args->character_ratio);
 
-    print_brightened_image(resized, arguments->brighten_amount, arguments->edge_sobel_threshold, arguments->color_option);
+    out_image(resized, args->brighten_amount, args->edge_sobel_threshold, args->color_option, args->output_file_path);
     
     rc_free_image_info(resized);
     rc_free_image_info(img);
