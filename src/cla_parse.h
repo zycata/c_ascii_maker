@@ -14,7 +14,7 @@ typedef struct {
     double brighten_amount;
 
     double contrast_change; // todo
-
+    char* output_file_path;
 } args_list;
 
 

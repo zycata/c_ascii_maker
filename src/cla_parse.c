@@ -13,7 +13,7 @@
 
 #define DEFAULT_MAX_WIDTH 96
 #define DEFAULT_MAX_HEIGHT 64
-#define DEFAULT_SOBEL_EDGE_THRESHOLD 64.0
+#define DEFAULT_SOBEL_EDGE_THRESHOLD 67.0 // im so funny but this value actually kinda works
 #define DEFAULT_COLOR_OPTION 1 // should have color
 #define DEFAULT_CHARACTER_RATIO 2.0
 #define DEFAULT_BRIGHTEN_AMOUNT 1.10
@@ -68,8 +68,11 @@ int get_terminal_size(size_t* width, size_t* height) {
 }
 
 
-
-// must give a pre allocated arguments
+void print_help(void) {
+    printf("Usage -h or -H for help\n");
+    printf("Usage: ./cascii.exe path/to/desired_image.jpg\n");
+}   
+// must give a pre allocated arguments returns 1 if successful and 0 if not
 int parse_arguments(int argc, char* argv[], args_list* arguments) {
 
     if (argc==1) {
@@ -77,7 +80,10 @@ int parse_arguments(int argc, char* argv[], args_list* arguments) {
         
         return 0;
     }
-
+    if(!strcmp(argv[1], "-h") || !strcmp(argv[1], "-H")) {
+        print_help();
+        return 0;
+    } 
 
     // first argument should be the filepath
     arguments->file_path = argv[1];
@@ -112,14 +118,19 @@ int parse_arguments(int argc, char* argv[], args_list* arguments) {
         else if (!strcmp(argv[i], "-ba") && i + 1 < argc) {
             arguments->brighten_amount = atof(argv[++i]);
         } 
+        else if (!strcmp(argv[i], "-cr") && i + 1 < argc) {
+            arguments->character_ratio = atof(argv[++i]);
+        } 
         else if (!strcmp(argv[i], "--usebw")) {
             arguments->color_option = 0;
         }
-        else if (!strcmp(argv[i], "-o")) {
+        else if (!strcmp(argv[i], "-o") && i + 1 < argc) {
             // pass but make it output to a .txt file
+            arguments->output_file_path = argv[++i];
         }
         else {
             fprintf(stderr, "Warning: Ignoring invalid or incomplete argument '%s'\n", argv[i]);
+            return 0;
         }
     }
 
@@ -148,5 +159,6 @@ void print_arguments(const args_list* args) {
     printf("  Color Option:           %d\n", args->color_option);
     printf("  Character Ratio:        %lf\n", args->character_ratio);
     printf("  Brighten Amount:        %lf\n", args->brighten_amount);
+    printf("  Output File Path:       %s\n", args->output_file_path != NULL? args->file_path : "(NULL)");
     printf("--------------------------\n");
 }
