@@ -233,9 +233,40 @@ double get_grayscale_from_pixel(image_information* img, size_t x, size_t y) {
     return gamma;
 }
 
+
+// turns an image to a grayscale img
+int convert_to_grayscale(image_information* img) {
+    if (img->channels <= 2) {
+        // no need to do it for already grayscale img
+        return 1;
+    }
+    double* grayscale_data = rc_malloc(sizeof(double) * img->width * img->height);
+    if (!grayscale_data) {
+        return 0;
+    }
+    size_t pos = 0;;
+    for (size_t y = 0; y < img->height; y++) {
+        // i SPENT like 10 minutes debugging just to realized i wrote x > img->width instead of < bruhify
+        for (size_t x = 0; x < img->width; x++) {
+            grayscale_data[pos] = get_grayscale_from_pixel(img, x, y);
+            pos++;
+            
+        } 
+    }
+    rc_free_ref(img->data);
+    img->data = grayscale_data;
+    img->channels = 1;
+    img->data_size = img->height * img->width;
+    printf("it works\n");
+    return 1;
+}
+
 // returns a value from -255.0 to 255.0 
 // kernel must be a square matrice + flattened
-double get_convolution_value_from_kernel(image_information* img, size_t x, size_t y, double* kernel, int kernel_rows, int kernel_cols) {
+// also literally no reason for me to pass in a function pointer i just REALLY wanted to use it for funnbvvnbn  
+double get_convolution_value_from_kernel(image_information* img, size_t x, size_t y, 
+                                    double* kernel, int kernel_rows, int kernel_cols,
+                                    double (*kernel_func) (image_information*, size_t, size_t )) {
     size_t cur_item = 0;
     // size_t kernel_size = kernel_rows * kernel_cols;
     // double* total_items = rc_malloc(sizeof(*total_items)*kernel_size);
@@ -249,12 +280,13 @@ double get_convolution_value_from_kernel(image_information* img, size_t x, size_
     // honestly i think i really could have done a better job with variable naming here
     for (int j = start_y; j <  start_y+kernel_rows; j++) {
         for (int i = start_x; i < start_x+kernel_cols; i++) {
+            // ignore negative values becaause it can be negative due to my logic subtracting half of the kernel row
             if ((j < 0 || i < 0) || (get_pixel(img, i, j) == NULL)) {
-                // pixel doesn't exist
+                // pixel doesn't exist also 
                 // honestly i do wish i could go back to python where it's just number instead of these data types
                 
             } else {
-                convolution_sum += get_grayscale_from_pixel(img, i, j) * kernel[cur_item];
+                convolution_sum += kernel_func(img, i, j) * kernel[cur_item];
                 cur_item++;
             }
             // fucklass logic
@@ -270,11 +302,11 @@ double get_convolution_value_from_kernel(image_information* img, size_t x, size_
 double get_sobel_x(image_information* img, size_t x, size_t y) {
     // sobel x kernel
     double sobel_kernal_x[] = SOBEL_X;
-    return get_convolution_value_from_kernel(img, x, y, sobel_kernal_x, SOBEL_X_ROWS, SOBEL_X_COLS);
+    return get_convolution_value_from_kernel(img, x, y, sobel_kernal_x, SOBEL_X_ROWS, SOBEL_X_COLS, get_grayscale_from_pixel);
 }
 
 double get_sobel_y(image_information* img, size_t x, size_t y) {
     // sobel x kernel
     double sobel_kernal_y[] = SOBEL_Y;
-    return get_convolution_value_from_kernel(img, x, y, sobel_kernal_y, SOBEL_Y_ROWS, SOBEL_Y_COLS);
+    return get_convolution_value_from_kernel(img, x, y, sobel_kernal_y, SOBEL_Y_ROWS, SOBEL_Y_COLS, get_grayscale_from_pixel);
 }
