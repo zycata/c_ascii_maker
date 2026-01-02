@@ -257,8 +257,29 @@ int convert_to_grayscale(image_information* img) {
     img->data = grayscale_data;
     img->channels = 1;
     img->data_size = img->height * img->width;
-    printf("it works\n");
     return 1;
+}
+
+
+// omg diy min function??? 
+double find_min(double a, double b) {
+    return a < b ? a : b;
+}
+void brighten_image(image_information* img, double brighten_amount) {
+    
+    
+    for (size_t y = 0; y < img->height; y++) {
+        // i SPENT like 10 minutes debugging just to realized i wrote x > img->width instead of < bruhify
+        for (size_t x = 0; x < img->width; x++) {
+            double* pixel = get_pixel(img, x, y);
+            for (size_t i = 0; i < img->channels; i++) {
+                pixel[i] = find_min(pixel[i]*brighten_amount, 255.0);
+            }
+            
+        } 
+    }
+   
+
 }
 
 // returns a value from -255.0 to 255.0 
@@ -300,13 +321,19 @@ double get_convolution_value_from_kernel(image_information* img, size_t x, size_
 
 
 double get_sobel_x(image_information* img, size_t x, size_t y) {
+    if (x == 0 || x == img->width - 1 || y == 0 || y == img->height - 1) {
+        return 0;
+    }
     // sobel x kernel
     double sobel_kernal_x[] = SOBEL_X;
     return get_convolution_value_from_kernel(img, x, y, sobel_kernal_x, SOBEL_X_ROWS, SOBEL_X_COLS, get_grayscale_from_pixel);
 }
 
 double get_sobel_y(image_information* img, size_t x, size_t y) {
-    // sobel x kernel
+    // sobel y kernel
+    if (x == 0 || x == img->width - 1 || y == 0 || y == img->height - 1) {
+        return 0;
+    }
     double sobel_kernal_y[] = SOBEL_Y;
     return get_convolution_value_from_kernel(img, x, y, sobel_kernal_y, SOBEL_Y_ROWS, SOBEL_Y_COLS, get_grayscale_from_pixel);
 }
