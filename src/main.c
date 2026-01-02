@@ -17,15 +17,12 @@ int main(int argc, char** argv) {
     int result = parse_arguments(argc, argv, args);
     if (result == 0) {
         printf("Incomplete arguments\n");
-        return 1;
     } else if (result == 2) {
         print_ascii_file(args->file_path);
-        return 0;
+    } else {
+        produce_output(args);
     }
 
-    
-    
-    produce_output(args);
 
     rc_free_ref(args);
     return 0;
