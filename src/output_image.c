@@ -1,5 +1,5 @@
-#include "output_image.h"
-#include "image.h"
+#include "../include/output_image.h"
+#include "../include/image.h"
 
 #include <stdio.h>
 #include <stdlib.h>

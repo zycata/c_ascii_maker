@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "rc_malloc.h"
-#include "cla_parse.h"
-#include "image.h"
-#include "output_image.h"
+#include "../include/rc_malloc.h"
+#include "../include/cla_parse.h"
+#include "../include/image.h"
+#include "../include/output_image.h"
 
 
 void produce_output(args_list* arguments);

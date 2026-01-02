@@ -1,7 +1,7 @@
 // certified command line arguments momentos
 #include <stdio.h>
 #include <stdlib.h>
-#include "cla_parse.h"
+#include "../include/cla_parse.h"
 #include <string.h>
 #ifdef _WIN32
     #include <windows.h>

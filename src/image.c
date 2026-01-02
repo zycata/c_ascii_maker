@@ -1,7 +1,7 @@
-#include "image.h"
-#include "rc_malloc.h"
+#include "../include/image.h"
+#include "../include/rc_malloc.h"
 #define STB_IMAGE_IMPLEMENTATION
-#include "../stbi/stb_image.h"
+#include "../include/stb_image.h"
 #include <stdio.h>
 
 #define SOBEL_X {-1, 0, 1, -2, 0, 2, -1, 0, 1}

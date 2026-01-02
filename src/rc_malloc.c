@@ -1,6 +1,6 @@
 
 
-#include "rc_malloc.h"
+#include "../include/rc_malloc.h"
 
 
 // why the fuck is null needed here bruhify
