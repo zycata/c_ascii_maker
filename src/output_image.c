@@ -49,7 +49,7 @@ void output_the_image(image_information* img, double sobel_threshhold, FILE* out
                 int r = pixel[0];
                 int g = pixel[1];
                 int b = pixel[2];
-                fprintf(outstream ,"\x1b[38;2;%d;%d;%dm%c", (int) r, (int) g, (int) b, character_to_use);
+                fprintf(outstream ,"\x1b[38;2;%03d;%03d;%03dm%c", (int) r, (int) g, (int) b, character_to_use);
             }
         }
         fprintf(outstream, "\n");
@@ -80,4 +80,65 @@ void out_image(image_information* img, double brighten_amount, double sobel_thre
         color_option == 1 ? printf("You may need to use a terminal viewer to see color -> use cat %s to view in your terminal\n", out_filename): printf("\n");
     }
     
+}
+
+long get_file_size(FILE *fp) {
+    long size;
+    // Go to the end of the file
+    fseek(fp, 0L, SEEK_END);
+    // Get the current position, which is the file size
+    size = ftell(fp);
+    
+    // Go back to the beginning for fread
+    fseek(fp, 0L, SEEK_SET);
+    return size;
+}
+
+char* read_file(const char* in_filepath) {
+    FILE* file;
+    char *buffer = NULL;
+    long file_size;
+    file = fopen(in_filepath, "rb");
+    if (!file) {
+        return NULL;
+    } 
+    
+    file_size = get_file_size(file);
+    if (file_size < 0) {
+        fprintf(stderr, "Failed to read to file\n");
+        fclose(file);
+        return NULL;
+    }
+
+    buffer = (char*) malloc(file_size + 1);
+    if (!buffer) {
+        fclose(file);
+        return NULL;
+    }
+    
+    long result = fread(buffer, 1, file_size, file);
+    if (result != file_size) {
+        free(buffer);
+        fclose(file);
+        return NULL;
+    }
+
+    buffer[file_size] = '\0';
+
+    fclose(file);
+
+    return buffer;
+
+}
+
+void print_ascii_file(const char* filepath) {
+    char* content = read_file(filepath);
+
+    if (content == NULL) {
+        fprintf(stderr, "File Read failed\n");
+        return;
+    }
+
+    printf("%s",content);
+    free(content);
 }

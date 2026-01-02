@@ -20,11 +20,11 @@
 
 void test_system(void) {
 #ifdef _WIN32
-    printf("OMG WINDOWS MOMENT OMG");
+    printf("You are currently on a Windows Machine\n");
 
 
 #else
-    printf("OMG LINUX LINUX REAL REAL");
+    printf("You are currently not on a Windows Machine (Probably linux)");
 
 #endif
     printf("\n");
@@ -68,22 +68,40 @@ int get_terminal_size(size_t* width, size_t* height) {
 }
 
 
-void print_help(void) {
+void print_help(const char* execname) {
     printf("Usage -h or -H for help\n");
-    printf("Usage: ./cascii.exe path/to/desired_image.jpg\n");
+    printf("Usage: %s path/to/desired_image.jpg -other -flags\n", execname);
+    printf("Usage to read an outputted file: %s -r path/to/outputed\n", execname);
+    printf("-----Flags-----\n");
+    printf("- -mw maximum width (Default terminal height or %d characters) \n", DEFAULT_MAX_WIDTH);
+    printf("- -mh maximum height (Default terminal height or %d characters) \n", DEFAULT_MAX_HEIGHT);
+    printf("- -set Sobel edge detect threshold (DEFAULT: %lf) \n", DEFAULT_SOBEL_EDGE_THRESHOLD);
+    printf("- -cr Character Ratio (Default %lf)\n", DEFAULT_CHARACTER_RATIO);
+    printf("- -ba Brighten image amount (Default %lf) \n", DEFAULT_BRIGHTEN_AMOUNT);
+    printf("- -o Output to ASCII to file (DEFAULT OFF)\n");
+    printf("- --usebw use black and white (Default OFF) \n");
 }   
 // must give a pre allocated arguments returns 1 if successful and 0 if not
 int parse_arguments(int argc, char* argv[], args_list* arguments) {
 
     if (argc==1) {
-        fprintf(stderr, "Not enough command line arguments\n");
+        fprintf(stderr, "Not enough command line arguments, use -h for help\n");
         
         return 0;
     }
     if(!strcmp(argv[1], "-h") || !strcmp(argv[1], "-H")) {
-        print_help();
+        print_help(argv[0]);
         return 0;
-    } 
+    } else if (!strcmp(argv[1], "-r") || !strcmp(argv[1], "-R")) {
+
+        if (argc != 3) {
+            fprintf(stderr, "In complete arguments usage for reading:\n%s -r [filename]\n", argv[0]);
+            return 0;
+        } 
+
+        arguments->file_path = argv[2];
+        return 2;
+    }
 
     // first argument should be the filepath
     arguments->file_path = argv[1];
@@ -95,6 +113,8 @@ int parse_arguments(int argc, char* argv[], args_list* arguments) {
     arguments->color_option = DEFAULT_COLOR_OPTION;
     arguments->character_ratio = DEFAULT_CHARACTER_RATIO;
     arguments->brighten_amount = DEFAULT_BRIGHTEN_AMOUNT;
+
+    arguments->output_file_path = NULL;
     
     size_t width, height;
 
