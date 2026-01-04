@@ -172,12 +172,13 @@ void calculate_new_dimensions(size_t* new_width, size_t* new_height, size_t orig
 }
 // yeah i kinda suck at allocating memory actually
 // yeah uhh it doesnt work if the new image size is too similar to the old one :skull: i hope that scenario NEVER happens 
-image_information* resize_image(image_information* original, size_t max_width, size_t max_height, double terminal_ratio) {
+// update: now resizes the images instead of making a new one
+void resize_image(image_information* img, size_t max_width, size_t max_height, double terminal_ratio) {
     size_t new_width, new_height;
-    size_t channels = original->channels;
+    size_t channels = img->channels;
 
     // lord forgive me for my sins
-    calculate_new_dimensions(&new_width, &new_height, original->width, original->height, max_width, max_height, terminal_ratio);
+    calculate_new_dimensions(&new_width, &new_height, img->width, img->height, max_width, max_height, terminal_ratio);
 
 
     size_t resized_total_data_size = new_width * new_height * channels;
@@ -194,15 +195,15 @@ image_information* resize_image(image_information* original, size_t max_width, s
         yeah i'd never be able to think of this shit in an interview
     */
     for (size_t _y = 0; _y < new_height; _y++) {
-        size_t y1 = (_y * original->height) / (new_height);
-        size_t y2 = ((_y + 1) * original->height) / (new_height);
+        size_t y1 = (_y * img->height) / (new_height);
+        size_t y2 = ((_y + 1) * img->height) / (new_height);
 
         for (size_t _x = 0; _x < new_width; _x++) {
-            size_t x1 = (_x * original->width) / (new_width);
-            size_t x2 = ((_x + 1) * original->width) / (new_width);
+            size_t x1 = (_x * img->width) / (new_width);
+            size_t x2 = ((_x + 1) * img->width) / (new_width);
 
             // todo ?? multithread this (i need a reason for rc_malloc to exist)
-            write_average_pixel(original, &resized_image_data[(_x + _y * new_width) * channels], x1, x2, y1, y2);
+            write_average_pixel(img, &resized_image_data[(_x + _y * new_width) * channels], x1, x2, y1, y2);
         }
     }
 
@@ -210,14 +211,15 @@ image_information* resize_image(image_information* original, size_t max_width, s
 
 
 
-    image_information* resized_image = rc_malloc(sizeof(image_information));
-    resized_image->width = new_width;
-    resized_image->height = new_height;
-    resized_image->channels = channels;
-    resized_image->data_size = resized_total_data_size;
-    resized_image->data = resized_image_data;
+    img->width = new_width;
+    img->height = new_height;
+    
+    img->data_size = resized_total_data_size;
 
-    return resized_image;
+    rc_free_ref(img->data);
+    img->data = resized_image_data;
+
+    
 }
 
 // returns a value from 0 to 255.0
