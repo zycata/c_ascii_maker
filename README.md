@@ -1,8 +1,9 @@
 # C ascii maker
 
-Simple command line that can take an input image and generator ascii-art from the image
+Simple command line that can take an input image and generator ascii-art from the image. Check [this folder](./examples/) for couple example outputs. Making terminal characters smaller will improve output quality significantly. 
 
 Special thanks to [Xander Gouws] (https://github.com/gouwsxander) and his youtube video for inspiring me to create this project. [Link To Video] (https://www.youtube.com/watch?v=t8aSqlC_Duo)
+
 
 Usage:
 ```bash
@@ -21,6 +22,9 @@ make clang
 # compiled with optimizations
 make release
 ```
+Build Requirements:
+- GCC or CLANG version that supports C99
+- GNU Make 
 
 ### Optional flags
 - `-mw` maximum width  (Default terminal width or 96 characters)  
@@ -82,3 +86,7 @@ Example use cases
 - Output a character depending on the luminosity of a region
 - Use Ansi Escape codes to output color to the terminal
 
+### Couple Examples (Featuring Kazuma Kiryu)
+
+![Yakuza 0 Kiryu Cover photo](./examples/yakuza0ascii.png)
+![Kazuma Kiryu Cover photo](./examples/KiryuAscii.png)
