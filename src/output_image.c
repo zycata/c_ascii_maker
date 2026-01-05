@@ -1,5 +1,6 @@
 #include "../include/output_image.h"
 #include "../include/image.h"
+#include "../include/cla_parse.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -141,4 +142,17 @@ void print_ascii_file(const char* filepath) {
 
     printf("%s",content);
     free(content);
+}
+
+void produce_output(args_list* args) {
+    image_information* img = load_image(args->file_path);
+    if (!img) {
+        return;
+    }
+    resize_image(img, args->max_width, args->max_height, args->character_ratio);
+
+    out_image(img, args->brighten_amount, args->edge_sobel_threshold, args->color_option, args->output_file_path);
+    
+    rc_free_image_info(img);
+    
 }
