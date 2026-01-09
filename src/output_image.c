@@ -56,7 +56,9 @@ void output_the_image(image_information* img, double sobel_threshhold, FILE* out
         fprintf(outstream, "\n");
     }
 
-    // fprintf(outstream, "\x1b[0m"); realized i dont need this if I'm just... not printing anything afterwards
+    fprintf(outstream, "\x1b[0m");
+    // ansi escape color code causes the next lines on windows powershell in non admin mode to continue using the last used color
+    // not a super big deal
 }
 
 void out_image(image_information* img, double brighten_amount, double sobel_threshhold, int color_option, const char* out_filename) {
@@ -78,7 +80,7 @@ void out_image(image_information* img, double brighten_amount, double sobel_thre
     if (out_filename != NULL) {
         fclose(outstream);
         printf("successfully written to: %s\n", out_filename);
-        color_option == 1 ? printf("You may need to use a terminal viewer to see color -> use cat %s to view in your terminal\n", out_filename): printf("\n");
+        color_option == 1 ? printf("You may need to use a terminal viewer to see color -> use cat %s to view in your terminal or use the -r flag to view the output \n", out_filename) : printf("\n");
     }
     
 }

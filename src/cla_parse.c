@@ -16,7 +16,7 @@
 #define DEFAULT_SOBEL_EDGE_THRESHOLD 67.0 // im so funny but this value actually kinda works
 #define DEFAULT_COLOR_OPTION 1 // should have color
 #define DEFAULT_CHARACTER_RATIO 2.0
-#define DEFAULT_BRIGHTEN_AMOUNT 1.10
+#define DEFAULT_BRIGHTEN_AMOUNT 1.0
 
 void test_system(void) {
 #ifdef _WIN32
@@ -73,12 +73,12 @@ void print_help(const char* execname) {
     printf("Usage: %s path/to/desired_image.jpg -other -flags\n", execname);
     printf("Usage to read an outputted file: %s -r path/to/outputed\n", execname);
     printf("-----Flags-----\n");
-    printf("- -mw maximum width (Default terminal height or %d characters) \n", DEFAULT_MAX_WIDTH);
-    printf("- -mh maximum height (Default terminal height or %d characters) \n", DEFAULT_MAX_HEIGHT);
-    printf("- -set Sobel edge detect threshold (DEFAULT: %lf) \n", DEFAULT_SOBEL_EDGE_THRESHOLD);
-    printf("- -cr Character Ratio (Default %lf)\n", DEFAULT_CHARACTER_RATIO);
-    printf("- -ba Brighten image amount (Default %lf) \n", DEFAULT_BRIGHTEN_AMOUNT);
-    printf("- -o Output to ASCII to file (DEFAULT OFF)\n");
+    printf("- -mw [pos integer] maximum width (Default terminal height or %d characters) \n", DEFAULT_MAX_WIDTH);
+    printf("- -mh [pos integer] maximum height (Default terminal height or %d characters) \n", DEFAULT_MAX_HEIGHT);
+    printf("- -set [double] Sobel edge detect threshold (DEFAULT: %lf) \n", DEFAULT_SOBEL_EDGE_THRESHOLD);
+    printf("- -cr [double] Character Ratio (Default %lf)\n", DEFAULT_CHARACTER_RATIO);
+    printf("- -ba [double] Brighten image amount (Default %lf) \n", DEFAULT_BRIGHTEN_AMOUNT);
+    printf("- -o [filename] Output to ASCII to file (DEFAULT OFF)\n");
     printf("- --usebw use black and white (Default OFF) \n");
 }   
 // must give a pre allocated arguments returns 1 if successful and 0 if not
