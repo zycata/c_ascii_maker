@@ -2,7 +2,7 @@
 
 Simple command line that can take an input image and generator ascii-art from the image. Check [this folder](./examples/) for couple example outputs. Making terminal characters smaller will improve output quality significantly. 
 
-Special thanks to [Xander Gouws] (https://github.com/gouwsxander) and his youtube video for inspiring me to create this project. [Link To Video] (https://www.youtube.com/watch?v=t8aSqlC_Duo)
+Special thanks to [Xander Gouws](https://github.com/gouwsxander) and his youtube video for inspiring me to create this project. [Link To Video](https://www.youtube.com/watch?v=t8aSqlC_Duo)
 
 
 Usage:
@@ -79,7 +79,7 @@ Example use cases
 
 ## How it works (In a nutshell..)
 
-- First loads an image using [stbi_image] (https://github.com/nothings/stb)
+- First loads an image using [stb image](https://github.com/nothings/stb)
 - Resizes image to match given parameters or the terminal height and width while accounting for the character ratio in terminals (typically 1 to 2)
 - Does an Image convolution across the given image using a sobel Kernel to give sharper edges
 - Uses luminosity for the sobel threshold and outputs | \ / _ depending on which direction the sobel is
