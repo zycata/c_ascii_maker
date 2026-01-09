@@ -10,7 +10,6 @@ Usage:
 ./ascii.exe path/to/image.png -other [value] --flags
 ```
 
-
 To build: 
 ```bash
 # Regular build
@@ -31,7 +30,7 @@ Build Requirements:
 - `-mh` maximum height (Default terminal height or 64 characters)  
 - `-set` Sobel edge detect threshold (DEFAULT: 67.0) (yes I know this feels like a joke but it works better than I expected)
 - `-cr` Character Ratio (Default 2.0)  
-- `-ba` Brighten image amount (Default 1.1) 
+- `-ba` Brighten image amount (Default 1.0 -> Doesn't brighten) Note that any value over 2.0 may result in overly bright images  
 - `--usebw` output with no color (Default OFF) 
 
 - `-o` Output to ASCII to file (DEFAULT OFF)
@@ -50,7 +49,7 @@ cat lightning.txt
 less -R lightning.txt
 
 # or just use cascii to read it
-./cascii.exe lightning
+./cascii.exe -r lightning
 
 # example with --usebw flag
 ./cascii.exe lightning.jpg -o lightning-normal.txt --usebw
@@ -82,8 +81,8 @@ Example use cases
 
 - First loads an image using [stbi_image] (https://github.com/nothings/stb)
 - Resizes image to match given parameters or the terminal height and width while accounting for the character ratio in terminals (typically 1 to 2)
-- Do an Image convolution across the given image using a sobel Kernel to give sharper edges
-- Output a character depending on the luminosity of a region
+- Does an Image convolution across the given image using a sobel Kernel to give sharper edges
+- Uses luminosity for the sobel threshold and outputs | \ / _ depending on which direction the sobel is
 - Use Ansi Escape codes to output color to the terminal
 
 ### Couple Examples (Featuring Kazuma Kiryu)

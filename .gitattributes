@@ -4,4 +4,4 @@
 *.c !linguist-vendored
 # *.h !linguist-vendored
 
-Makefile !linguist-vendored
+makefile !linguist-vendored
