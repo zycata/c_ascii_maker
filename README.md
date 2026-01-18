@@ -88,4 +88,4 @@ Example use cases
 ### Couple Examples 
 
 ![The one and only Lightning Macqueen](./examples/LightningAscii.png)
-![Kazuma Kiryu Cover photo](./examples/KiryuAscii.pn)
+![Kazuma Kiryu Cover photo](./examples/KiryuAscii.png)
