@@ -31,6 +31,8 @@ void rc_keep_ref(void* ptr) {
 }
 
 void rc_free_ref(void* ptr) {
+    // is this peak engineering this line below? 
+    if (!ptr) return;
     char *ref_count_start = ((char*)ptr) - RC_EXTRA_SIZE;
     REF_COUNT_TYPE *ref_count = (REF_COUNT_TYPE *)ref_count_start;
 

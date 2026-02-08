@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../include/cla_parse.h"
+#include "../include/rc_malloc.h" // genuinely no clue why im still using this but oh well
 #include <string.h>
 #ifdef _WIN32
     #include <windows.h>
@@ -17,6 +18,7 @@
 #define DEFAULT_COLOR_OPTION 1 // should have color
 #define DEFAULT_CHARACTER_RATIO 2.0
 #define DEFAULT_BRIGHTEN_AMOUNT 1.0
+#define DEFAULT_VALUE_CHARS " .-=+*x#$&X@"
 
 void test_system(void) {
 #ifdef _WIN32
@@ -68,6 +70,7 @@ int get_terminal_size(size_t* width, size_t* height) {
 }
 
 
+
 void print_help(const char* execname) {
     printf("Usage -h or -H for help\n");
     printf("Usage: %s path/to/desired_image.jpg -other -flags\n", execname);
@@ -78,6 +81,8 @@ void print_help(const char* execname) {
     printf("- -set [double] Sobel edge detect threshold (DEFAULT: %lf) \n", DEFAULT_SOBEL_EDGE_THRESHOLD);
     printf("- -cr [double] Character Ratio (Default %lf)\n", DEFAULT_CHARACTER_RATIO);
     printf("- -ba [double] Brighten image amount (Default %lf) \n", DEFAULT_BRIGHTEN_AMOUNT);
+    // in this case you can wrap them in quotations to include whitespaces " .-=@" vs just .-=@
+    printf("- -c [string] Chars to use in ascending brightness (Default %s) \n", DEFAULT_VALUE_CHARS);
     printf("- -o [filename] Output to ASCII to file (DEFAULT OFF)\n");
     printf("- --usebw use black and white (Default OFF) \n");
 }   
@@ -115,7 +120,7 @@ int parse_arguments(int argc, char* argv[], args_list* arguments) {
     arguments->brighten_amount = DEFAULT_BRIGHTEN_AMOUNT;
 
     arguments->output_file_path = NULL;
-    
+    arguments->value_chars = NULL;
     size_t width, height;
 
     if(!get_terminal_size(&width, &height)) {
@@ -147,6 +152,10 @@ int parse_arguments(int argc, char* argv[], args_list* arguments) {
         else if (!strcmp(argv[i], "-o") && i + 1 < argc) {
             // pass but make it output to a .txt file
             arguments->output_file_path = argv[++i];
+        } else if (!strcmp(argv[i], "-c") && i + 1 < argc) {
+            i++;
+            arguments->value_chars = rc_malloc(sizeof(strlen(argv[i] + 1)));
+            strcpy(arguments->value_chars, argv[i]);
         }
         else {
             fprintf(stderr, "Warning: Ignoring invalid or incomplete argument '%s'\n", argv[i]);
@@ -154,7 +163,10 @@ int parse_arguments(int argc, char* argv[], args_list* arguments) {
         }
     }
 
-    
+    if (arguments->value_chars == NULL) {
+        arguments->value_chars = rc_malloc(sizeof(strlen(DEFAULT_VALUE_CHARS) + 1));
+        strcpy(arguments->value_chars, DEFAULT_VALUE_CHARS);
+    }
 
     // successfully parsed arguments
     return 1;
