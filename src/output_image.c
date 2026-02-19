@@ -5,10 +5,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#define VALUE_CHARS " .-=+*x#$&X@"
-#define N_VALUES (sizeof(VALUE_CHARS) - 1)
+#include <string.h>
 
+static char* VALUE_CHARS;
+static size_t N_VALUES = 0;
 
+void set_chars(char* characters) {
+    VALUE_CHARS = characters;
+    N_VALUES = strlen(VALUE_CHARS);
+}
 
 char get_ascii_char(double grayscale) {
     size_t index = (size_t) (grayscale * (double) N_VALUES);
@@ -147,6 +152,7 @@ void print_ascii_file(const char* filepath) {
 }
 
 void produce_output(args_list* args) {
+    set_chars(args->value_chars);
     image_information* img = load_image(args->file_path);
     if (!img) {
         return;
