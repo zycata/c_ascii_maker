@@ -7,7 +7,7 @@ Special thanks to [Xander Gouws](https://github.com/gouwsxander) and his youtube
 
 Usage:
 ```bash
-./ascii.exe path/to/image.png -other [value] --flags
+./cascii.exe path/to/image.png -other [value] --flags
 ```
 
 To build: 
@@ -89,7 +89,7 @@ Example use cases
 - Uses luminosity for the sobel threshold and outputs | \ / _ depending on which direction the sobel is
 - Use Ansi Escape codes to output color to the terminal
 
-### Couple Examples (Featuring Kazuma Kiryu)
+### Couple Examples
 ![Example with custom characters!!](./examples/sus_custom.png)
-![Yakuza 0 Kiryu Cover photo](./examples/yakuza0ascii.png)
+![The one and only Lightning Macqueen](./examples/LightningAscii.png)
 ![Kazuma Kiryu Cover photo](./examples/KiryuAscii.png)
