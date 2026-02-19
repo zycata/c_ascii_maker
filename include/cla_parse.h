@@ -15,6 +15,8 @@ typedef struct {
 
     double contrast_change; // todo
     char* output_file_path;
+    // will probably need to be freed heap mmeory go brr
+    char* value_chars;
 } args_list;
 
 

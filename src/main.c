@@ -1,13 +1,12 @@
 #include <stdio.h>
 #include "../include/cla_parse.h"
 #include "../include/output_image.h"
-
+#include "../include/rc_malloc.h"
 
 
 int main(int argc, char** argv) {
     args_list args;
     int result = parse_arguments(argc, argv, &args);
-
     switch (result) {
         case 0:
             // invalid command line arguments
@@ -25,6 +24,6 @@ int main(int argc, char** argv) {
             printf("unknown error occured when parsing command line arguments\n");
             return 1;
     }
-    
+    rc_free_ref(args.value_chars);
     return 0;
 }

@@ -31,7 +31,8 @@ Build Requirements:
 - `-set` Sobel edge detect threshold (DEFAULT: 67.0) (yes I know this feels like a joke but it works better than I expected)
 - `-cr` Character Ratio (Default 2.0)  
 - `-ba` Brighten image amount (Default 1.0 -> Doesn't brighten) Note that any value over 2.0 may result in overly bright images  
-- `--usebw` output with no color (Default OFF) 
+- `--usebw` output with no color (Default OFF)  
+- `-c` Use custom charcters for brightness in ascending order (Default: " .-=+*x#$&X@") Note that you can wrap "" around your input to include the whitespace character  
 
 - `-o` Output to ASCII to file (DEFAULT OFF)
 - `-r` Read outputted file (Slightly different usage -> `./cascii.exe -r file_to_read.txt`)
@@ -75,6 +76,9 @@ Example use cases
 
 # Output to a file
 ./cascii.exe lightning.jpg -o lightning.txt
+
+# Using custom characters for an image using whitespace, a, b and E
+./cascii.exe images/imposter.jpg -c " abE" 
 ```
 
 ## How it works (In a nutshell..)
@@ -85,7 +89,7 @@ Example use cases
 - Uses luminosity for the sobel threshold and outputs | \ / _ depending on which direction the sobel is
 - Use Ansi Escape codes to output color to the terminal
 
-### Couple Examples 
-
+### Couple Examples
+![Example with custom characters!!](./examples/sus_custom.png)
 ![The one and only Lightning Macqueen](./examples/LightningAscii.png)
 ![Kazuma Kiryu Cover photo](./examples/KiryuAscii.png)
