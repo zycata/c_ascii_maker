@@ -14,6 +14,7 @@ int main(int argc, char** argv) {
         case 1:
             // output an image normally
             produce_output(&args);
+            rc_free_ref(args.value_chars);
             break;
         case 2:
             // read from an outputted ascii image
@@ -24,6 +25,6 @@ int main(int argc, char** argv) {
             printf("unknown error occured when parsing command line arguments\n");
             return 1;
     }
-    rc_free_ref(args.value_chars);
+    
     return 0;
 }

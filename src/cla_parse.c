@@ -154,7 +154,9 @@ int parse_arguments(int argc, char* argv[], args_list* arguments) {
             arguments->output_file_path = argv[++i];
         } else if (!strcmp(argv[i], "-c") && i + 1 < argc) {
             i++;
-            arguments->value_chars = rc_malloc(sizeof(strlen(argv[i] + 1)));
+            // what a crazy bug strlen(argv[i]+1) instead of strlen(argv[i])+1
+            // also sizeof() should be around char not whatever the fuck I was doing
+            arguments->value_chars = rc_malloc(sizeof(char)*(strlen(argv[i]) + 1));
             strcpy(arguments->value_chars, argv[i]);
         }
         else {
@@ -164,7 +166,7 @@ int parse_arguments(int argc, char* argv[], args_list* arguments) {
     }
 
     if (arguments->value_chars == NULL) {
-        arguments->value_chars = rc_malloc(sizeof(strlen(DEFAULT_VALUE_CHARS) + 1));
+        arguments->value_chars = rc_malloc(sizeof(char)*(strlen(DEFAULT_VALUE_CHARS) + 1));
         strcpy(arguments->value_chars, DEFAULT_VALUE_CHARS);
     }
 
